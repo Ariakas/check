@@ -1,0 +1,10 @@
+<Files .htaccess>
+	order allow,deny
+	deny from all
+</Files>
+
+Options -Indexes
+
+RedirectMatch 404 ^/\.git/.*$
+RedirectMatch 404 ^/\.gitignore$
+RedirectMatch 404 ^/src/.*$
