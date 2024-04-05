@@ -31,5 +31,8 @@ async function request(url, data = {}, method = "GET") {
         }
     }
     response = await response.json();
+    if (response.status === "error") {
+        message(response.detail)
+    }
     return response;
 }

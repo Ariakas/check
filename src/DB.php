@@ -2,7 +2,9 @@
 
 namespace Check;
 
+use Exception;
 use mysqli;
+use Random\Randomizer;
 
 class DB {
     static private mysqli $link;
@@ -19,7 +21,7 @@ class DB {
 
     static private function escape_all(&...$params): void {
         foreach ($params as &$param) {
-            $param = self::$link->real_escape_string($param);
+            $param = self::$link->real_escape_string(strip_tags($param));
         }
     }
 
@@ -38,21 +40,25 @@ class DB {
 
     static function add_user($name, $email): bool {
         self::escape_all($name, $email);
+        $exits = self::$link->query("SELECT * FROM `users` WHERE `Email` = '$email'");
+        if ($exits && $exits->num_rows) {
+            throw new Exception("Email already exist");
+        }
         self::$link->query("INSERT INTO `users` (`Name`, `Email`, `Payout`) VALUES ('$name', '$email', 0)");
         if (self::$link->errno === 0) {
             $count = self::$link->query("SELECT COUNT(*) FROM `users`")->fetch_row()[0];
             $payout = self::total / $count;
             if (floor($payout) == $payout) {
                 self::$link->query("UPDATE `users` SET `Payout` = $payout WHERE 1");
-                return true;
             }
             else {
+                $random = (new Randomizer())->getInt(1, $count);
                 $part = floor($payout * 100) / 100;
                 $remaining = self::total - $count * $part;
-                self::$link->query("UPDATE `users` SET `Payout` = $part WHERE `Id` > 1");
-                self::$link->query("UPDATE `users` SET `Payout` = $part + $remaining WHERE `Id` = 1");
-                return true;
+                self::$link->query("UPDATE `users` SET `Payout` = $part WHERE `Id` != $random");
+                self::$link->query("UPDATE `users` SET `Payout` = $part + $remaining WHERE `Id` = $random");
             }
+            return true;
         }
         return false;
     }

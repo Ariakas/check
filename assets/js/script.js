@@ -1,27 +1,3 @@
-$$ = s => document.querySelectorAll(s)
-
-$ = s => document.querySelector(s)
-
-loader = s => $("#loader").classList.toggle("visible", s);
-
-get_users = () => {
-    loader(1);
-    request("api/", { op: "get_users" }, "POST").then(response => {
-        if (response.status === "success") {
-            let table = $("#table");
-            table.querySelectorAll(".td").forEach(v => v.remove());
-            for (let row of response.detail) {
-                table.insertAdjacentHTML("beforeend", `
-                    <div class="td" data-id="${row.id}">${row.name}</div>
-                    <div class="td" data-id="${row.id}">${row.email}</div>
-                    <div class="td" data-id="${row.id}">${parseFloat(row.payout)}€</div>
-                `);
-            }
-        }
-        loader(0);
-    });
-}
-
 window.onload = () => {
     let table = $("#table");
     $("#reset").addEventListener("click", () => {
@@ -32,10 +8,11 @@ window.onload = () => {
         });
     });
 
-    $("#add_user").addEventListener("click", () => {
+    $("#add_user").addEventListener("click", (e) => {
         let name = $("#name").value,
             email = $("#email").value;
-        if (name && email) {
+        if (name && email && $("#form").checkValidity()) {
+            e.preventDefault();
             loader(1);
             request("api/", { op: "add_user", name, email }, "POST").then(response => {
                 if (response.status === "success") {
@@ -68,5 +45,13 @@ window.onload = () => {
                 });
             }
         }
+    });
+
+    $("#popup_text_close").addEventListener("click", () => {
+        $("#popup_text").classList.remove("visible");
+    });
+
+    $("#show_more_fractional").addEventListener("click", () => {
+        message("In case of fractional amounts some indivisible part will be added randomly to one of the users. But you can just tap on another user to change that random. :)")
     });
 }

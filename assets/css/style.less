@@ -22,6 +22,10 @@ button {
     outline: none;
     font-size: 1.25rem;
 }
+img {
+    display: block;
+    max-width: 100%;
+}
 .outer_container {
     height: 100dvh;
     display: flex;
@@ -101,11 +105,18 @@ button {
             p {
                 font-size: 1.1rem;
                 opacity: .65;
+                text-align: center;
+                transition: .5s;
+                cursor: pointer;
+                align-self: center;
+                &:hover {
+                    color: darken(deepskyblue, 15%);
+                }
             }
         }
     }
 }
-#loader {
+.popup {
     position: fixed;
     inset: 0;
     background: fade(#fff, 50%);
@@ -115,6 +126,8 @@ button {
     &.visible {
         display: flex;
     }
+}
+#loader {
     .center {
         width: 4rem;
         height: 4rem;
@@ -145,6 +158,38 @@ button {
             }
             &:nth-child(4) {
                 animation-delay: .3s;
+            }
+        }
+    }
+}
+#popup_text {
+    .center {
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 5px 10px fade(#000, 35%);
+        padding: 1rem 1.5rem;
+        position: relative;
+        max-width: 50vw;
+        @media screen and (max-width: 700px) {
+            max-width: 90vw;
+            width: 90vw;
+        }
+        p {
+            max-height: calc(90dvh - 5rem);
+            text-align: center;
+            overflow: auto;
+        }
+        button {
+            position: absolute;
+            right: -4rem;
+            top: -4rem;
+            background: none;
+            @media screen and (max-width: 700px) {
+                right: -1rem;
+            }
+            img {
+                width: 2.5rem;
+                height: 2.5rem;
             }
         }
     }
