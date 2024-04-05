@@ -21,7 +21,7 @@ class Site {
             HTTP::response_success($users);
         }
         else {
-            HTTP::response_error("Could not fetch users");
+            HTTP::response_error("Users list is empty");
         }
     }
 
