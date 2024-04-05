@@ -9,4 +9,7 @@
         "DB_PASSWORD" => $db_password,
         "DB_NAME" => $db_name
     ];
+    if (!file_exists("cfg")) {
+        mkdir("cfg");
+    }
     file_put_contents("cfg/cfg.json", json_encode($config, JSON_UNESCAPED_UNICODE));
