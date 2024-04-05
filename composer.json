@@ -12,7 +12,9 @@
         }
     ],
     "require": {
-      "ext-mysqli": "*",
-      "ext-readline": "*"
+        "ext-mysqli": "*",
+        "ext-readline": "*",
+        "ext-curl": "*",
+        "ext-mbstring": "*"
     }
 }
